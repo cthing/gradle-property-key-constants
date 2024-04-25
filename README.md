@@ -126,8 +126,9 @@ properties files can be specified using any of the methods provided by that task
 ### Generated Source File Layout
 
 By default, the generated constants are wrapped in an inner class for each property file. The plugin
-provides a number of other layouts for the constants. A layout is selected by configuring the
-`propertyKeyConstants` extension.
+provides a number of other layouts for the constants. A layout is selected globally by configuring the
+`propertyKeyConstants` extension or per task by configuring the `generatePropertyKeyConstants` or 
+`generateTestPropertyKeyConstants` task.
 
 #### Nested Classes
 
@@ -137,7 +138,7 @@ configuration is needed. The above example shows the source code resulting from 
 #### Flat With Prefix
 
 The key constants for each property file are defined directly in the generated class. The constants are
-all prefixed with the name of the property file in uppercase. The following selects this layout:
+all prefixed with the name of the property file in uppercase. The following globally selects this layout:
 
 ```kotlin
 import org.cthing.gradle.plugins.properties.SourceLayout
@@ -149,6 +150,21 @@ propertyKeyConstants {
 }
 
 ...
+```
+
+or per task:
+
+```kotlin
+import org.cthing.gradle.plugins.properties.SourceLayout
+
+...
+
+tasks {
+    generatePropertyKeyConstants {
+        ...
+        sourceLayout = SourceLayout.FLAT_WITHOUT_PREFIX
+    }
+}
 ```
 
 For the above example properties files, the following Java source file is generated:
@@ -230,7 +246,7 @@ public final class Constants {
 ### Constants Access Modifier
 
 By default, the generated constants and classes are given public access. The plugin can be configured to
-generate the constants and classes with package private access.
+generate the constants and classes with package private access. Global configuration:
 
 ```kotlin
 import org.cthing.gradle.plugins.properties.SourceAccess
@@ -242,6 +258,21 @@ propertyKeyConstants {
 }
 
 ...
+```
+
+or per task configuration:
+
+```kotlin
+import org.cthing.gradle.plugins.properties.SourceAccess
+
+...
+
+tasks {
+    generatePropertyKeyConstants {
+        ...
+        sourceAccess = SourceAccess.PACKAGE
+    }
+}
 ```
 
 ### Output Directory
