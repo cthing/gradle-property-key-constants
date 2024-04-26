@@ -21,7 +21,7 @@ the application to refer to the strings using the same key regardless of the cur
 
 The property keys are strings and applications typically hardcode those strings wherever they need to obtain
 a property value. Unfortunately, this can lead to problems due to misspelling of keys, and can make renaming
-of keys a challenge because it is a string replacement. To address these issues, the `property-key-constants`
+of keys a challenge because it is a string replacement. To address these issues, the `org.cthing.property-key-constants`
 plugin extracts the key names from properties files and generates a source file containing constants whose
 values are the key names. This means that property values can be obtained using the constants rather than
 hardcoded strings. This avoids misspelling and makes renaming a straightforward refactoring operation.
