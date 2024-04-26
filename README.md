@@ -5,8 +5,9 @@ A Gradle plugin that generates a Java source file with constants for keys in pro
 ## Features
 
 * Processes multiple properties files
-* Control over generated source file layout (e.g wrap constants in inner classes)
-* Generated constants can be public or package private
+* Provides control over generated source file layout (e.g. wrap constants in inner classes)
+* Can generate constants as either public or package private fields
+* Automatically adds generated source files to source sets
 
 ## Motivation
 
