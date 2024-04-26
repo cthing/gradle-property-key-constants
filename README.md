@@ -1,5 +1,8 @@
 # ![C Thing Software](https://www.cthing.com/branding/CThingSoftware-57x60.png "C Thing Software") gradle-property-key-constants
 
+[![CI](https://github.com/cthing/gradle-property-key-constants/actions/workflows/ci.yml/badge.svg)](https://github.com/cthing/gradle-property-key-constants/actions/workflows/ci.yml)
+[![Portal](https://img.shields.io/gradle-plugin-portal/v/org.cthing.property-key-constants?label=Plugin%20Portal&logo=gradle)](https://plugins.gradle.org/plugin/org.cthing.property-key-constants)
+
 A Gradle plugin that generates a Java source file with constants for keys in properties files.
 
 ## Features
