@@ -212,13 +212,17 @@ public class PluginIntegTest {
     }
 
     private void verifyBuild(final BuildResult result, final TaskOutcome outcome) {
-        final BuildTask task = result.task(":generatePropertyKeyConstants");
-        assertThat(task).isNotNull();
-        assertThat(task.getOutcome()).as(result.getOutput()).isEqualTo(outcome);
+        final BuildTask genTask = result.task(":generatePropertyKeyConstants");
+        assertThat(genTask).isNotNull();
+        assertThat(genTask.getOutcome()).as(result.getOutput()).isEqualTo(outcome);
 
         if (outcome != SUCCESS) {
             return;
         }
+
+        final BuildTask buildTask = result.task(":build");
+        assertThat(buildTask).isNotNull();
+        assertThat(buildTask.getOutcome()).as(result.getOutput()).isEqualTo(SUCCESS);
 
         final Path actualSource = this.projectDir.resolve("build/generated-src/property-key-constants/main/org/cthing/test/Constants.java");
         assertThat(actualSource).isRegularFile();
