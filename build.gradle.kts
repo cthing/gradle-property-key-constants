@@ -39,7 +39,7 @@ gradlePlugin {
     vcsUrl = "https://github.com/cthing/gradle-property-key-constants"
 
     plugins {
-        create("locc4jPlugin") {
+        create("propertyKeyConstantsPlugin") {
             id = "org.cthing.property-key-constants"
             displayName = "Java constants from property file keys"
             description = "A Gradle plugin that generates a Java source file with constants for keys in properties files."
