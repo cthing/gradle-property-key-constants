@@ -131,7 +131,7 @@ public class PropertyKeyConstantsTask extends SourceTask {
     }
 
     /**
-     * Performs the work of writing the Java class file containing the properties file keys are constants.
+     * Performs the work of writing the Java class file containing the properties file keys as constants.
      *
      * @param writer  Writes the file
      * @param packageName  The Java package containing the class
