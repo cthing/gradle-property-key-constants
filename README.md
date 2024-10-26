@@ -37,7 +37,7 @@ applied to a Gradle project using the `plugins` block:
 
 ```kotlin
 plugins {
-  id("org.cthing.property-key-constants") version "1.0.0"
+  id("org.cthing.property-key-constants") version "2.0.0"
 }
 ```
 
@@ -64,7 +64,7 @@ To generate a constants file containing the property keys, configure the `genera
 ```kotlin
 plugins {
     java
-    id("org.cthing.property-key-constants") version "1.0.0"
+    id("org.cthing.property-key-constants") version "2.0.0"
 }
 
 tasks {
@@ -292,7 +292,7 @@ The following Gradle and Java versions are supported:
 
 | Plugin Version | Gradle Version | Minimum Java Version |
 |----------------|----------------|----------------------|
-| 1.0.0+         | 8.2+           | 17                   |
+| 2.0.0+         | 8.2+           | 17                   |
 
 ## Building
 
@@ -320,9 +320,9 @@ Perform the following steps to create a release.
 - Wait until CI successfully builds the release candidate
 - Verify GitHub Actions build is successful
 - In a browser go to the C Thing Software Jenkins CI page
-- Run the "gradle-property-key-constants-validate" job
+- Run the `gradle-property-key-constants-validate` job
 - Wait until that job successfully completes
-- Run the "gradle-property-key-constants-release" job to release the plugin to the Gradle Plugin Portal
+- Run the `gradle-property-key-constants-release` job to release the plugin to the Gradle Plugin Portal
 - Wait for the plugin to be reviewed and made available by the Gradle team
 - In a browser, go to the project on GitHub
 - Generate a release with the tag `<version>`
