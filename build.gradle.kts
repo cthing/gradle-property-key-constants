@@ -28,7 +28,7 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-version = ProjectVersion("1.0.1", BuildType.snapshot)
+version = ProjectVersion("2.0.0", BuildType.snapshot)
 group = "org.cthing"
 description = "A Gradle plugin that generates a Java source file with constants for keys in properties files."
 
@@ -54,7 +54,9 @@ gradlePlugin {
 }
 
 dependencies {
-    implementation(libs.cthingAnnots)
+    implementation(libs.jspecify)
+
+    compileOnly(libs.cthingAnnots)
 
     testImplementation(libs.assertJ)
     testImplementation(libs.commonsIO)
