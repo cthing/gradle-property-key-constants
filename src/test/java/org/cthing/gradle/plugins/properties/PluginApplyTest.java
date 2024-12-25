@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.stream.Stream;
 
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.cthing.assertj.gradle.GradleProjectAssert.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
@@ -28,21 +28,19 @@ public class PluginApplyTest {
         final Project project = ProjectBuilder.builder().withName("testProject").withProjectDir(projectDir).build();
         project.getPluginManager().apply("org.cthing.property-key-constants");
 
-        final Object extensionObj = project.getExtensions().findByName(PropertyKeyConstantsPlugin.EXTENSION_NAME);
-        assertThat(extensionObj).isNotNull();
-        assertThat(extensionObj).isInstanceOf(PropertyKeyConstantsExtension.class);
+        assertThat(project).hasExtensionWithType(PropertyKeyConstantsPlugin.EXTENSION_NAME,
+                                                 PropertyKeyConstantsExtension.class);
 
-        final PropertyKeyConstantsExtension extension = (PropertyKeyConstantsExtension)extensionObj;
+        final PropertyKeyConstantsExtension extension =
+                (PropertyKeyConstantsExtension)project.getExtensions().getByName(PropertyKeyConstantsPlugin.EXTENSION_NAME);
         assertThat(extension.getSourceAccess().get()).isEqualTo(SourceAccess.PUBLIC);
         assertThat(extension.getSourceLayout().get()).isEqualTo(SourceLayout.NESTED_CLASSES);
 
-        final Task mainTask = project.getTasks().findByName("generatePropertyKeyConstants");
-        assertThat(mainTask).isNotNull().isInstanceOf(PropertyKeyConstantsTask.class);
+        assertThat(project).hasTaskWithType("generatePropertyKeyConstants", PropertyKeyConstantsTask.class);
+        assertThat(project).hasTaskWithType("generateTestPropertyKeyConstants", PropertyKeyConstantsTask.class);
 
-        final Task testTask = project.getTasks().findByName("generateTestPropertyKeyConstants");
-        assertThat(testTask).isNotNull().isInstanceOf(PropertyKeyConstantsTask.class);
-
-        final PropertyKeyConstantsTask task = (PropertyKeyConstantsTask)mainTask;
+        final PropertyKeyConstantsTask task =
+                (PropertyKeyConstantsTask)project.getTasks().getByName("generatePropertyKeyConstants");
         assertThat(task.getClassname().isPresent()).isFalse();
         assertThat(task.getOutputDirectory().get().getAsFile().getPath())
                 .endsWith("build/generated-src/property-key-constants/main");

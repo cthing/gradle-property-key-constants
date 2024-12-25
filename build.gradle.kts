@@ -59,6 +59,7 @@ dependencies {
     compileOnly(libs.cthingAnnots)
 
     testImplementation(libs.assertJ)
+    testImplementation(libs.assertJGradle)
     testImplementation(libs.commonsIO)
     testImplementation(libs.junitApi)
     testImplementation(libs.junitParams)
