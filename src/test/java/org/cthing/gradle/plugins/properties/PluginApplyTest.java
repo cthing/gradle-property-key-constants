@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.cthing.assertj.gradle.GradleProjectAssert.assertThat;
+import static org.cthing.assertj.gradle.GradleAssertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
@@ -33,19 +33,20 @@ public class PluginApplyTest {
 
         final PropertyKeyConstantsExtension extension =
                 (PropertyKeyConstantsExtension)project.getExtensions().getByName(PropertyKeyConstantsPlugin.EXTENSION_NAME);
-        assertThat(extension.getSourceAccess().get()).isEqualTo(SourceAccess.PUBLIC);
-        assertThat(extension.getSourceLayout().get()).isEqualTo(SourceLayout.NESTED_CLASSES);
+        assertThat(extension.getSourceAccess()).contains(SourceAccess.PUBLIC);
+        assertThat(extension.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
 
         assertThat(project).hasTaskWithType("generatePropertyKeyConstants", PropertyKeyConstantsTask.class);
         assertThat(project).hasTaskWithType("generateTestPropertyKeyConstants", PropertyKeyConstantsTask.class);
 
         final PropertyKeyConstantsTask task =
                 (PropertyKeyConstantsTask)project.getTasks().getByName("generatePropertyKeyConstants");
-        assertThat(task.getClassname().isPresent()).isFalse();
+        assertThat(task.getClassname()).isEmpty();
+        assertThat(task.getOutputDirectory()).isPresent();
         assertThat(task.getOutputDirectory().get().getAsFile().getPath())
                 .endsWith("build/generated-src/property-key-constants/main");
-        assertThat(task.getSourceAccess().get()).isEqualTo(SourceAccess.PUBLIC);
-        assertThat(task.getSourceLayout().get()).isEqualTo(SourceLayout.NESTED_CLASSES);
+        assertThat(task.getSourceAccess()).contains(SourceAccess.PUBLIC);
+        assertThat(task.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
     }
 
     public static Stream<Arguments> basenameProvider() {
