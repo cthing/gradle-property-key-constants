@@ -28,25 +28,21 @@ public class PluginApplyTest {
         final Project project = ProjectBuilder.builder().withName("testProject").withProjectDir(projectDir).build();
         project.getPluginManager().apply("org.cthing.property-key-constants");
 
-        assertThat(project).hasExtensionWithType(PropertyKeyConstantsPlugin.EXTENSION_NAME,
-                                                 PropertyKeyConstantsExtension.class);
+        assertThat(project).hasExtensionSatisfying(PropertyKeyConstantsPlugin.EXTENSION_NAME,
+                                                   PropertyKeyConstantsExtension.class, extension -> {
+            assertThat(extension.getSourceAccess()).contains(SourceAccess.PUBLIC);
+            assertThat(extension.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
+        });
 
-        final PropertyKeyConstantsExtension extension =
-                (PropertyKeyConstantsExtension)project.getExtensions().getByName(PropertyKeyConstantsPlugin.EXTENSION_NAME);
-        assertThat(extension.getSourceAccess()).contains(SourceAccess.PUBLIC);
-        assertThat(extension.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
+        assertThat(project).hasTaskSatisfying("generatePropertyKeyConstants", PropertyKeyConstantsTask.class, task -> {
+            assertThat(task.getClassname()).isEmpty();
+            assertThat(task.getOutputDirectory()).getString()
+                                                 .endsWith("build/generated-src/property-key-constants/main");
+            assertThat(task.getSourceAccess()).contains(SourceAccess.PUBLIC);
+            assertThat(task.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
+        });
 
-        assertThat(project).hasTaskWithType("generatePropertyKeyConstants", PropertyKeyConstantsTask.class);
         assertThat(project).hasTaskWithType("generateTestPropertyKeyConstants", PropertyKeyConstantsTask.class);
-
-        final PropertyKeyConstantsTask task =
-                (PropertyKeyConstantsTask)project.getTasks().getByName("generatePropertyKeyConstants");
-        assertThat(task.getClassname()).isEmpty();
-        assertThat(task.getOutputDirectory()).isPresent();
-        assertThat(task.getOutputDirectory().get().getAsFile().getPath())
-                .endsWith("build/generated-src/property-key-constants/main");
-        assertThat(task.getSourceAccess()).contains(SourceAccess.PUBLIC);
-        assertThat(task.getSourceLayout()).contains(SourceLayout.NESTED_CLASSES);
     }
 
     public static Stream<Arguments> basenameProvider() {
