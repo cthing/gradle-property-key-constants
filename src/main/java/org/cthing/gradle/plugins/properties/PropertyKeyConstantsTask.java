@@ -35,7 +35,7 @@ import org.gradle.api.tasks.TaskExecutionException;
 /**
  * Performs the reading of the properties file(s) and generation of the constants class.
  */
-public class PropertyKeyConstantsTask extends SourceTask {
+public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPRESS CHECKSTYLE ok
 
     private static final Logger LOGGER = Logging.getLogger(PropertyKeyConstantsTask.class);
     private static final Pattern PROP_SEP_REGEX = Pattern.compile("[.\\-]");

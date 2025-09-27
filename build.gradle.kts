@@ -44,19 +44,18 @@ gradlePlugin {
     vcsUrl = "https://github.com/cthing/gradle-property-key-constants"
 
     plugins {
-        create("propertyKeyConstantsPlugin") {
+        create("propertyKeyConstantsPlugin", Action {
             id = "org.cthing.property-key-constants"
             displayName = "Java constants from property file keys"
             description = "A Gradle plugin that generates a Java source file with constants for keys in properties files."
             tags = listOf("properties", "keys", "constants")
             implementationClass = "org.cthing.gradle.plugins.properties.PropertyKeyConstantsPlugin"
-        }
+        })
     }
 }
 
 dependencies {
-    implementation(libs.jspecify)
-
+    compileOnly(libs.jspecify)
     compileOnly(libs.cthingAnnots)
 
     testImplementation(libs.assertJ)
