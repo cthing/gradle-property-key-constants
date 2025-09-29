@@ -22,7 +22,6 @@ import org.gradle.api.GradleException;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
-import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Input;
@@ -35,28 +34,19 @@ import org.gradle.api.tasks.TaskExecutionException;
 /**
  * Performs the reading of the properties file(s) and generation of the constants class.
  */
-public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPRESS CHECKSTYLE ok
+public abstract class PropertyKeyConstantsTask extends SourceTask {
 
     private static final Logger LOGGER = Logging.getLogger(PropertyKeyConstantsTask.class);
     private static final Pattern PROP_SEP_REGEX = Pattern.compile("[.\\-]");
     private static final Pattern WORD_REGEX = Pattern.compile("[\\W_\\-]+|(?<=\\p{Ll})(?=\\p{Lu})");
-
-    private final Property<String> classname;
-    private final DirectoryProperty outputDirectory;
-    private final Property<SourceAccess> sourceAccess;
-    private final Property<SourceLayout> sourceLayout;
 
     public PropertyKeyConstantsTask() {
         setGroup("Generate Constants");
 
         final PropertyKeyConstantsExtension extension = getProject().getExtensions()
                                                                     .getByType(PropertyKeyConstantsExtension.class);
-
-        final ObjectFactory objects = getProject().getObjects();
-        this.classname = objects.property(String.class);
-        this.outputDirectory = objects.directoryProperty();
-        this.sourceAccess = objects.property(SourceAccess.class).convention(extension.getSourceAccess());
-        this.sourceLayout = objects.property(SourceLayout.class).convention(extension.getSourceLayout());
+        getSourceAccess().convention(extension.getSourceAccess());
+        getSourceLayout().convention(extension.getSourceLayout());
 
         // If there are no properties files, don't do anything.
         onlyIf(task -> !getSource().isEmpty());
@@ -68,9 +58,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
      * @return Fully qualified class name.
      */
     @Input
-    public Property<String> getClassname() {
-        return this.classname;
-    }
+    public abstract Property<String> getClassname();
 
     /**
      * Obtains the location on the filesystem for the generated class.
@@ -78,9 +66,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
      * @return Output directory.
      */
     @OutputDirectory
-    public DirectoryProperty getOutputDirectory() {
-        return this.outputDirectory;
-    }
+    public abstract DirectoryProperty getOutputDirectory();
 
     /**
      * Obtains the access modifier for the generated constants. The default is
@@ -89,9 +75,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
      * @return Access modifier for the generated constants.
      */
     @Input
-    public Property<SourceAccess> getSourceAccess() {
-        return this.sourceAccess;
-    }
+    public abstract Property<SourceAccess> getSourceAccess();
 
     /**
      * Obtains the layout for the generated source code. The default is
@@ -100,23 +84,21 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
      * @return Layout for the generated source code.
      */
     @Input
-    public Property<SourceLayout> getSourceLayout() {
-        return this.sourceLayout;
-    }
+    public abstract Property<SourceLayout> getSourceLayout();
 
     /**
      * Generates the property key constants class.
      */
     @TaskAction
     public void generateConstants() {
-        final Provider<String> pathname = this.classname.map(cname -> cname.replace('.', '/') + ".java");
-        final File classFile = this.outputDirectory.file(pathname).get().getAsFile();
+        final Provider<String> pathname = getClassname().map(cname -> cname.replace('.', '/') + ".java");
+        final File classFile = getOutputDirectory().file(pathname).get().getAsFile();
         final File parentFile = classFile.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()) {
             throw new GradleException("Could not create directories " + parentFile);
         }
 
-        final String cname = this.classname.get();
+        final String cname = getClassname().get();
         final int pos = cname.lastIndexOf('.');
         assert pos != -1;
         final String packageName = cname.substring(0, pos);
@@ -138,7 +120,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
      * @param className  Name of the top level class (not qualified by the package name)
      */
     private void writeConstants(final PrintWriter writer, final String packageName, final String className) {
-        final String modifier = this.sourceAccess.get() == SourceAccess.PUBLIC ? "public " : "";
+        final String modifier = getSourceAccess().get() == SourceAccess.PUBLIC ? "public " : "";
         final String propFilesComment = getSource().getFiles()
                                                    .stream()
                                                    .map(File::getName)
@@ -162,7 +144,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {     // SUPPR
                       %sfinal class %s {
                       """, packageName, propFilesComment, modifier, className);
 
-        switch (this.sourceLayout.get()) {
+        switch (getSourceLayout().get()) {
             case NESTED_CLASSES -> writeNestedClasses(writer, modifier);
             case FLAT_WITH_PREFIX -> writeFlatWithPrefix(writer, modifier);
             case FLAT_WITHOUT_PREFIX -> writeFlatWithoutPrefix(writer, modifier);
