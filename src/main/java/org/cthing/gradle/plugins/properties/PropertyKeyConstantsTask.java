@@ -43,11 +43,6 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {
     public PropertyKeyConstantsTask() {
         setGroup("Generate Constants");
 
-        final PropertyKeyConstantsExtension extension = getProject().getExtensions()
-                                                                    .getByType(PropertyKeyConstantsExtension.class);
-        getSourceAccess().convention(extension.getSourceAccess());
-        getSourceLayout().convention(extension.getSourceLayout());
-
         // If there are no properties files, don't do anything.
         onlyIf(task -> !getSource().isEmpty());
     }
@@ -237,7 +232,7 @@ public abstract class PropertyKeyConstantsTask extends SourceTask {
      */
     private List<String> readPropertyNames(final File propertiesFile) {
         final Properties properties = new Properties();
-        try (InputStream inputStream = Files.newInputStream(getProject().file(propertiesFile).toPath())) {
+        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())) {
             properties.load(inputStream);
         } catch (final IOException ex) {
             throw new TaskExecutionException(this, ex);
