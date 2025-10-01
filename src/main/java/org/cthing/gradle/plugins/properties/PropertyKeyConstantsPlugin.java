@@ -30,7 +30,8 @@ public class PropertyKeyConstantsPlugin implements Plugin<Project> {
     public void apply(final Project project) {
         project.getPluginManager().apply(JavaPlugin.class);
 
-        final PropertyKeyConstantsExtension extension = project.getExtensions().create(EXTENSION_NAME, PropertyKeyConstantsExtension.class, project);
+        final PropertyKeyConstantsExtension extension =
+                project.getExtensions().create(EXTENSION_NAME, PropertyKeyConstantsExtension.class, project);
 
         // For each Java source set, create a task for generating constants from property file keys.
         project.getExtensions().getByType(JavaPluginExtension.class).getSourceSets().all(sourceSet -> {
