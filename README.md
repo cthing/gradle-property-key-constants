@@ -37,7 +37,7 @@ applied to a Gradle project using the `plugins` block:
 
 ```kotlin
 plugins {
-  id("org.cthing.property-key-constants") version "2.0.0"
+  id("org.cthing.property-key-constants") version "2.1.0"
 }
 ```
 
@@ -64,7 +64,7 @@ To generate a constants file containing the property keys, configure the `genera
 ```kotlin
 plugins {
     java
-    id("org.cthing.property-key-constants") version "2.0.0"
+    id("org.cthing.property-key-constants") version "2.1.0"
 }
 
 tasks {
@@ -292,7 +292,7 @@ The following Gradle and Java versions are supported:
 
 | Plugin Version | Gradle Version | Minimum Java Version |
 |----------------|----------------|----------------------|
-| 2.0.0+         | 8.2+           | 17                   |
+| 2.1.0+         | 8.2+, 9.0+     | 17                   |
 
 ## Building
 
